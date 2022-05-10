@@ -43,7 +43,7 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
       "name": "TIMES",
       "check": "Number"
     }],
-    "message1": "%{BKY_CONTROLS_REPEAT_INPUT_DO} %1",
+    "message1": " %1",
     "args1": [{
       "type": "input_statement",
       "name": "DO"
@@ -66,7 +66,7 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
       "min": 0,
       "precision": 1
     }],
-    "message1": "%{BKY_CONTROLS_REPEAT_INPUT_DO} %1",
+    "message1": " %1",
     "args1": [{
       "type": "input_statement",
       "name": "DO"
@@ -86,7 +86,7 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
         "type": "field_dropdown",
         "name": "MODE",
         "options": [
-          ["%{BKY_CONTROLS_WHILEUNTIL_OPERATOR_WHILE}", "WHILE"],
+          // ["%{BKY_CONTROLS_WHILEUNTIL_OPERATOR_WHILE}", "WHILE"],
           ["%{BKY_CONTROLS_WHILEUNTIL_OPERATOR_UNTIL}", "UNTIL"]
         ]
       },
@@ -96,7 +96,7 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
         "check": "Boolean"
       }
     ],
-    "message1": "%{BKY_CONTROLS_REPEAT_INPUT_DO} %1",
+    "message1": " %1",
     "args1": [{
       "type": "input_statement",
       "name": "DO"

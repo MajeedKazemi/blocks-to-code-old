@@ -259,7 +259,7 @@ Blockly.Msg.CONTROLS_WHILEUNTIL_HELPURL = 'https://github.com/google/blockly/wik
 Blockly.Msg.CONTROLS_WHILEUNTIL_INPUT_DO = Blockly.Msg.CONTROLS_REPEAT_INPUT_DO;
 /** @type {string} */
 /// dropdown - Specifies that a loop should [https://github.com/google/blockly/wiki/Loops#repeat-while repeat while] the following condition is true.
-Blockly.Msg.CONTROLS_WHILEUNTIL_OPERATOR_WHILE = 'repeat while';
+Blockly.Msg.CONTROLS_WHILEUNTIL_OPERATOR_WHILE = 'while';
 /** @type {string} */
 /// dropdown - Specifies that a loop should [https://github.com/google/blockly/wiki/Loops#repeat-until repeat until] the following condition becomes true.
 Blockly.Msg.CONTROLS_WHILEUNTIL_OPERATOR_UNTIL = 'repeat until';
@@ -347,7 +347,7 @@ Blockly.Msg.CONTROLS_IF_MSG_ELSEIF = 'else if';
 /// block text - See [https://github.com/google/blockly/wiki/IfElse https://github.com/google/blockly/wiki/IfElse].  The English word "otherwise" would probably be superior to "else", but the latter is used because it is traditional and shorter.
 Blockly.Msg.CONTROLS_IF_MSG_ELSE = 'else';
 /** @type {string} */
-Blockly.Msg.CONTROLS_IF_MSG_THEN = Blockly.Msg.CONTROLS_REPEAT_INPUT_DO;
+Blockly.Msg.CONTROLS_IF_MSG_THEN = 'then';
 /** @type {string} */
 Blockly.Msg.CONTROLS_IF_IF_TITLE_IF = Blockly.Msg.CONTROLS_IF_MSG_IF;
 /** @type {string} */
@@ -758,7 +758,7 @@ Blockly.Msg.TEXT_TEXT_TOOLTIP = 'A letter, word, or line of text.';
 Blockly.Msg.TEXT_JOIN_HELPURL = 'https://github.com/google/blockly/wiki/Text#text-creation';
 /** @type {string} */
 /// block text - See [https://github.com/google/blockly/wiki/Text#text-creation https://github.com/google/blockly/wiki/Text#text-creation].
-Blockly.Msg.TEXT_JOIN_TITLE_CREATEWITH = 'create text with';
+Blockly.Msg.TEXT_JOIN_TITLE_CREATEWITH = 'join';
 /** @type {string} */
 /// tooltip - See [https://github.com/google/blockly/wiki/Text#text-creation create text with] for more information.
 Blockly.Msg.TEXT_JOIN_TOOLTIP = 'Create a piece of text by joining together any number of items.';
@@ -1022,7 +1022,7 @@ Blockly.Msg.TEXT_PRINT_HELPURL = 'https://github.com/google/blockly/wiki/Text#pr
 /// [https://github.com/google/blockly/wiki/Text#printing-text
 /// https://github.com/google/blockly/wiki/Text#printing-text].
 /// \n\nParameters:\n* %1 - the value to print
-Blockly.Msg.TEXT_PRINT_TITLE = 'print %1';
+Blockly.Msg.TEXT_PRINT_TITLE = 'say %1';
 /** @type {string} */
 /// tooltip - See [https://github.com/google/blockly/wiki/Text#printing-text
 /// https://github.com/google/blockly/wiki/Text#printing-text].
@@ -1034,12 +1034,12 @@ Blockly.Msg.TEXT_PROMPT_HELPURL = 'https://github.com/google/blockly/wiki/Text#g
 /// dropdown - Specifies that a piece of text should be requested from the user with
 /// the following message.  See [https://github.com/google/blockly/wiki/Text#printing-text
 /// https://github.com/google/blockly/wiki/Text#printing-text].
-Blockly.Msg.TEXT_PROMPT_TYPE_TEXT = 'prompt for text with message';
+Blockly.Msg.TEXT_PROMPT_TYPE_TEXT = 'ask';
 /** @type {string} */
 /// dropdown - Specifies that a number should be requested from the user with the
 /// following message.  See [https://github.com/google/blockly/wiki/Text#printing-text
 /// https://github.com/google/blockly/wiki/Text#printing-text].
-Blockly.Msg.TEXT_PROMPT_TYPE_NUMBER = 'prompt for number with message';
+Blockly.Msg.TEXT_PROMPT_TYPE_NUMBER = 'ask';
 /** @type {string} */
 /// dropdown - Precedes the message with which the user should be prompted for
 /// a number.  See [https://github.com/google/blockly/wiki/Text#printing-text

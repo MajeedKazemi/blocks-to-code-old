@@ -34,17 +34,24 @@ Blockly.Themes.Classic.defaultBlockStyles = {
   "logic_blocks": {
     "colourPrimary": "210"
   },
-  "loop_blocks": {
-    "colourPrimary": "120"
+  "loop_blocks": { //Control
+    "colourPrimary": "#FFAB19",
+    "colourSecondary": "#CF8B17"
   },
-  "math_blocks": {
-    "colourPrimary": "230"
+  "math_blocks": { //Operators
+    "colourPrimary": "#40BF4A",
+    "colourSecondary": "#389438"
   },
   "procedure_blocks": {
     "colourPrimary": "290"
   },
-  "text_blocks": {
-    "colourPrimary": "160"
+  "text_blocks": { // Looks
+    "colourPrimary": "#9966FF",
+    "colourSecondary": "#774DCB"
+  },
+  "sensing_blocks": { // Sensing
+    "colourPrimary":"#4CBFE6",
+    "colourSecondary":"#2E8EB8"
   },
   "variable_blocks": {
     "colourPrimary": "330"
@@ -52,8 +59,9 @@ Blockly.Themes.Classic.defaultBlockStyles = {
   "variable_dynamic_blocks": {
     "colourPrimary": "310"
   },
-  "hat_blocks": {
-    "colourPrimary": "330",
+  "hat_blocks": { // Events
+    "colourPrimary": "#FFD500",
+    "colourSecondary": "#CC9900",
     "hat": "cap"
   }
 };
@@ -87,6 +95,7 @@ Blockly.Themes.Classic.categoryStyles = {
     "colour": "310"
   }
 };
+
 
 Blockly.Themes.Classic =
     new Blockly.Theme('classic', Blockly.Themes.Classic.defaultBlockStyles,

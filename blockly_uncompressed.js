@@ -40,7 +40,7 @@ goog.addDependency('../../../../core/connection_checker.js', ['Blockly.Connectio
 goog.addDependency('../../../../core/connection_db.js', ['Blockly.ConnectionDB'], ['Blockly.RenderedConnection', 'Blockly.connectionTypes', 'Blockly.constants'], {});
 goog.addDependency('../../../../core/connection_types.js', ['Blockly.connectionTypes'], [], {});
 goog.addDependency('../../../../core/constants.js', ['Blockly.constants'], ['Blockly.connectionTypes'], {});
-goog.addDependency('../../../../core/contextmenu.js', ['Blockly.ContextMenu'], ['Blockly.Events', 'Blockly.Events.BlockCreate', 'Blockly.Menu', 'Blockly.MenuItem', 'Blockly.Msg', 'Blockly.WidgetDiv', 'Blockly.Xml', 'Blockly.browserEvents', 'Blockly.constants', 'Blockly.utils', 'Blockly.utils.Coordinate', 'Blockly.utils.Rect', 'Blockly.utils.aria', 'Blockly.utils.dom', 'Blockly.utils.userAgent', 'goog.ui.MenuSeparator'], {});
+goog.addDependency('../../../../core/contextmenu.js', ['Blockly.ContextMenu'], ['Blockly.Events', 'Blockly.Events.BlockCreate', 'Blockly.Menu', 'Blockly.MenuItem', 'Blockly.MenuSeparator', 'Blockly.Msg', 'Blockly.WidgetDiv', 'Blockly.Xml', 'Blockly.browserEvents', 'Blockly.constants', 'Blockly.utils', 'Blockly.utils.Coordinate', 'Blockly.utils.Rect', 'Blockly.utils.aria', 'Blockly.utils.dom', 'Blockly.utils.userAgent'], {});
 goog.addDependency('../../../../core/contextmenu_items.js', ['Blockly.ContextMenuItems'], ['Blockly.ContextMenuRegistry', 'Blockly.Events', 'Blockly.constants', 'Blockly.inputTypes'], {'lang': 'es5'});
 goog.addDependency('../../../../core/contextmenu_registry.js', ['Blockly.ContextMenuRegistry'], [], {'lang': 'es5'});
 goog.addDependency('../../../../core/css.js', ['Blockly.Css'], ['Blockly.Colours'], {'lang': 'es5'});

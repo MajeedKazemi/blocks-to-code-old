@@ -90,8 +90,9 @@ Blockly.FieldString.prototype.initView = function() {
     'font-size': this.quoteSize_ + 'px',
     'class': 'field-text-quote'
   }, this.fieldGroup_);
-  this.quoteLeft_.appendChild(document.createTextNode('"'));
-  this.quoteRight_.appendChild(document.createTextNode('"'));
+  // CHANGE: remove text string quotes
+  // this.quoteLeft_.appendChild(document.createTextNode('"'));
+  // this.quoteRight_.appendChild(document.createTextNode('"'));
 
   this.mouseOverWrapper_ =
       Blockly.bindEvent_(

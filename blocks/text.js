@@ -45,10 +45,6 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
     "style": "field_blocks",
     "helpUrl": "%{BKY_TEXT_TEXT_HELPURL}",
     "tooltip": "%{BKY_TEXT_TEXT_TOOLTIP}",
-    "extensions": [
-      //"text_quotes",
-      "parent_tooltip_when_inline"
-    ]
   },
   {
     "type": "text_multiline",
@@ -76,16 +72,13 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
     "style": "text_blocks",
     "helpUrl": "%{BKY_TEXT_TEXT_HELPURL}",
     "tooltip": "%{BKY_TEXT_TEXT_TOOLTIP}",
-    "extensions": [
-      "parent_tooltip_when_inline"
-    ]
   },
   {
     "type": "text_join",
     "message0": "",
     "output": "String",
     "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
-    "style": "text_blocks",
+    "style": "math_blocks",
     "helpUrl": "%{BKY_TEXT_JOIN_HELPURL}",
     "tooltip": "%{BKY_TEXT_JOIN_TOOLTIP}",
     "mutator": "text_join_mutator"
@@ -129,9 +122,9 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
     "previousStatement": null,
     "nextStatement": null,
     "style": "text_blocks",
-    "extensions": [
-      "text_append_tooltip"
-    ]
+    // "extensions": [
+    //   "text_append_tooltip"
+    // ]
   },
   {
     "type": "text_length",
@@ -420,19 +413,22 @@ Blockly.Blocks['text_prompt_ext'] = {
    * @this {Blockly.Block}
    */
   init: function() {
-    var TYPES = [
-      [Blockly.Msg['TEXT_PROMPT_TYPE_TEXT'], 'TEXT'],
-      [Blockly.Msg['TEXT_PROMPT_TYPE_NUMBER'], 'NUMBER']
-    ];
+    // var TYPES = [
+    //   [Blockly.Msg['TEXT_PROMPT_TYPE_TEXT'], 'TEXT'],
+    //   [Blockly.Msg['TEXT_PROMPT_TYPE_NUMBER'], 'NUMBER']
+    // ];
     this.setHelpUrl(Blockly.Msg['TEXT_PROMPT_HELPURL']);
-    this.setStyle('text_blocks');
+    this.setStyle('sensing_blocks');
     // Assign 'this' to a variable for use in the closures below.
     var thisBlock = this;
-    var dropdown = new Blockly.FieldDropdown(TYPES, function(newOp) {
-      thisBlock.updateType_(newOp);
-    });
-    this.appendValueInput('TEXT')
-        .appendField(dropdown, 'TYPE');
+    // var dropdown = new Blockly.FieldDropdown(TYPES, function(newOp) {
+    //   thisBlock.updateType_(newOp);
+    // });
+    this.appendDummyInput()
+        .appendField('ask')
+        .appendField(new Blockly.FieldTextInput('What\'s your name?'), 'TEXT')
+        .appendField('and wait');
+    // .appendField(dropdown, 'TYPE');
     this.setOutput(true, 'String');
     this.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND);
     this.setTooltip(function() {
@@ -610,21 +606,13 @@ Blockly.Constants.Text.QUOTE_IMAGE_MIXIN = {
    * @readonly
    */
   QUOTE_IMAGE_LEFT_DATAURI:
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAKCAQAAAAqJXdxAAAA' +
-    'n0lEQVQI1z3OMa5BURSF4f/cQhAKjUQhuQmFNwGJEUi0RKN5rU7FHKhpjEH3TEMtkdBSCY' +
-    '1EIv8r7nFX9e29V7EBAOvu7RPjwmWGH/VuF8CyN9/OAdvqIXYLvtRaNjx9mMTDyo+NjAN1' +
-    'HNcl9ZQ5oQMM3dgDUqDo1l8DzvwmtZN7mnD+PkmLa+4mhrxVA9fRowBWmVBhFy5gYEjKMf' +
-    'z9AylsaRRgGzvZAAAAAElFTkSuQmCC',
+    'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==',
   /**
    * Image data URI of an LTR closing double quote (same as RTL opening double quote).
    * @readonly
    */
   QUOTE_IMAGE_RIGHT_DATAURI:
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAKCAQAAAAqJXdxAAAA' +
-    'qUlEQVQI1z3KvUpCcRiA8ef9E4JNHhI0aFEacm1o0BsI0Slx8wa8gLauoDnoBhq7DcfWhg' +
-    'gONDmJJgqCPA7neJ7p934EOOKOnM8Q7PDElo/4x4lFb2DmuUjcUzS3URnGib9qaPNbuXvB' +
-    'O3sGPHJDRG6fGVdMSeWDP2q99FQdFrz26Gu5Tq7dFMzUvbXy8KXeAj57cOklgA+u1B5Aos' +
-    'lLtGIHQMaCVnwDnADZIFIrXsoXrgAAAABJRU5ErkJggg==',
+    'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==',
   /**
    * Pixel width of QUOTE_IMAGE_LEFT_DATAURI and QUOTE_IMAGE_RIGHT_DATAURI.
    * @readonly
@@ -679,10 +667,10 @@ Blockly.Constants.Text.QUOTE_IMAGE_MIXIN = {
  * Wraps TEXT field with images of double quote characters.
  * @this {Blockly.Block}
  */
-Blockly.Constants.Text.TEXT_QUOTES_EXTENSION = function() {
-  this.mixin(Blockly.Constants.Text.QUOTE_IMAGE_MIXIN);
-  this.quoteField_('TEXT');
-};
+// Blockly.Constants.Text.TEXT_QUOTES_EXTENSION = function() {
+//   this.mixin(Blockly.Constants.Text.QUOTE_IMAGE_MIXIN);
+//   this.quoteField_('TEXT');
+// };
 
 /**
  * Mixin for mutator functions in the 'text_join_mutator' extension.
@@ -1032,8 +1020,8 @@ Blockly.Constants.Text.TEXT_CHARAT_EXTENSION = function() {
 Blockly.Extensions.register('text_indexOf_tooltip',
     Blockly.Constants.Text.TEXT_INDEXOF_TOOLTIP_EXTENSION);
 
-Blockly.Extensions.register('text_quotes',
-    Blockly.Constants.Text.TEXT_QUOTES_EXTENSION);
+// Blockly.Extensions.register('text_quotes',
+//     Blockly.Constants.Text.TEXT_QUOTES_EXTENSION);
 
 Blockly.Extensions.registerMutator('text_join_mutator',
     Blockly.Constants.Text.TEXT_JOIN_MUTATOR_MIXIN,
