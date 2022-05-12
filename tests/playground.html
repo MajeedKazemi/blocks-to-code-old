@@ -5,6 +5,7 @@
 <title>PXT Blockly Playground</title>
 <script src="../blockly_uncompressed.js"></script>
 <script src="../generators/javascript.js"></script>
+<script src="../generators/javascript/event.js"></script>
 <script src="../generators/javascript/logic.js"></script>
 <script src="../generators/javascript/loops.js"></script>
 <script src="../generators/javascript/math.js"></script>
@@ -15,6 +16,7 @@
 <script src="../generators/javascript/variables_dynamic.js"></script>
 <script src="../generators/javascript/procedures.js"></script>
 <script src="../generators/python.js"></script>
+<script src="../generators/python/event.js"></script>
 <script src="../generators/python/logic.js"></script>
 <script src="../generators/python/loops.js"></script>
 <script src="../generators/python/math.js"></script>
@@ -24,36 +26,7 @@
 <script src="../generators/python/variables.js"></script>
 <script src="../generators/python/variables_dynamic.js"></script>
 <script src="../generators/python/procedures.js"></script>
-<script src="../generators/php.js"></script>
-<script src="../generators/php/logic.js"></script>
-<script src="../generators/php/loops.js"></script>
-<script src="../generators/php/math.js"></script>
-<script src="../generators/php/text.js"></script>
-<script src="../generators/php/lists.js"></script>
-<script src="../generators/php/colour.js"></script>
-<script src="../generators/php/variables.js"></script>
-<script src="../generators/php/variables_dynamic.js"></script>
-<script src="../generators/php/procedures.js"></script>
-<script src="../generators/lua.js"></script>
-<script src="../generators/lua/logic.js"></script>
-<script src="../generators/lua/loops.js"></script>
-<script src="../generators/lua/math.js"></script>
-<script src="../generators/lua/text.js"></script>
-<script src="../generators/lua/lists.js"></script>
-<script src="../generators/lua/colour.js"></script>
-<script src="../generators/lua/variables.js"></script>
-<script src="../generators/lua/variables_dynamic.js"></script>
-<script src="../generators/lua/procedures.js"></script>
-<script src="../generators/dart.js"></script>
-<script src="../generators/dart/logic.js"></script>
-<script src="../generators/dart/loops.js"></script>
-<script src="../generators/dart/math.js"></script>
-<script src="../generators/dart/text.js"></script>
-<script src="../generators/dart/lists.js"></script>
-<script src="../generators/dart/colour.js"></script>
-<script src="../generators/dart/variables.js"></script>
-<script src="../generators/dart/variables_dynamic.js"></script>
-<script src="../generators/dart/procedures.js"></script>
+
 <script src="../msg/messages.js"></script>
 <!-- pxt-blockly -->
 <script src="../blocks/extensions.js"></script>
@@ -68,9 +41,7 @@
 <script src="../blocks/procedures.js"></script>
 <script src="../blocks/event.js"></script>
 <script src="../blocks/pxt_blockly_functions.js"></script>
-<script src="compile/test_blocks.js"></script>
-<script src="compile/pxt_test_blocks.js"></script>
-<script src="themes/test_themes.js"></script>
+
 <script src="./playgrounds/screenshot.js"></script>
 <script src="../node_modules/@blockly/block-test/dist/index.js"></script>
 
@@ -98,17 +69,10 @@ function start() {
         comments: true,
         collapse: true,
         disable: true,
-        grid:
-          {
-            spacing: 25,
-            length: 3,
-            colour: '#ccc',
-            snap: true
-          },
         horizontalLayout: false,
         maxBlocks: Infinity,
         maxInstances: {'test_basic_limit_instances': 3},
-        maxTrashcanContents: 256,
+        trashcan: false,
         media: '../media/',
         oneBasedIndex: true,
         readOnly: false,
@@ -139,14 +103,6 @@ function start() {
     if (text) {
       document.getElementById('importExport').value = text;
     }
-    // Restore event logging state.
-    var logMainEventsState = sessionStorage.getItem('logEvents');
-    logEvents(Boolean(Number(logMainEventsState)));
-    var logToolboxFlyoutEventsState = sessionStorage.getItem('logFlyoutEvents');
-    logFlyoutEvents(Boolean(Number(logToolboxFlyoutEventsState)));
-  } else {
-    // MSIE 11 does not support sessionStorage on file:// URLs.
-    logEvents(false);
   }
   taChange();
   if (autoimport) {
@@ -211,10 +167,20 @@ function fromXml() {
   taChange();
 }
 
+function execute(code) {
+  var F = new Function(code)
+  return (F());
+}
+
 function toCode(lang) {
   var output = document.getElementById('importExport');
   output.value = Blockly[lang].workspaceToCode(workspace);
-  taChange();
+
+  if (lang === "JavaScript") {
+    execute(output.value)
+  }
+
+  taChange(); 
 }
 
 // Disable the "Import from XML" button if the XML is invalid.
@@ -233,33 +199,6 @@ function taChange() {
   document.getElementById('import').disabled = !valid;
 }
 
-function logEvents(state) {
-  var checkbox = document.getElementById('logCheck');
-  checkbox.checked = state;
-  if (sessionStorage) {
-    sessionStorage.setItem('logEvents', Number(state));
-  }
-  if (state) {
-    workspace.addChangeListener(logger);
-  } else {
-    workspace.removeChangeListener(logger);
-  }
-}
-
-function logFlyoutEvents(state) {
-  var checkbox = document.getElementById('logFlyoutCheck');
-  checkbox.checked = state;
-  if (sessionStorage) {
-    sessionStorage.setItem('logFlyoutEvents', Number(state));
-  }
-  var flyoutWorkspace = workspace.getFlyout().getWorkspace();
-  if (state) {
-    flyoutWorkspace.addChangeListener(logger);
-  } else {
-    flyoutWorkspace.removeChangeListener(logger);
-  }
-}
-
 function configureContextMenu(menuOptions, e) {
   var screenshotOption = {
     text: 'Download Screenshot',
@@ -272,28 +211,6 @@ function configureContextMenu(menuOptions, e) {
 
   // Adds a default-sized workspace comment to the workspace.
   menuOptions.push(Blockly.ContextMenu.workspaceCommentOption(workspace, e));
-}
-
-function logger(e) {
-  console.log(e);
-}
-
-function airstrike(n) {
-  var prototypes = [];
-  var toolbox = getToolboxElement();
-  var blocks = toolbox.getElementsByTagName('block');
-  for (var i = 0, block; block = blocks[i]; i++) {
-    prototypes.push(block.getAttribute('type'));
-  }
-  for (var i = 0; i < n; i++) {
-    var prototype = prototypes[Math.floor(Math.random() * prototypes.length)];
-    var block = workspace.newBlock(prototype);
-    block.initSvg();
-    block.getSvgRoot().setAttribute('transform', 'translate(' +
-        Math.round(Math.random() * 450 + 40) + ', ' +
-        Math.round(Math.random() * 600 + 40) + ')');
-    block.render();
-  }
 }
 
 function randomtest(n) {
@@ -317,49 +234,6 @@ function randomtest(n) {
 }
 
 
-function spaghetti(n) {
-  var xml = spaghettiXml;
-  for(var i = 0; i < n; i++) {
-    xml = xml.replace(/(<(statement|next)( name="DO0")?>)<\//g,
-        '$1' + spaghettiXml + '</');
-  }
-  xml = '<xml xmlns="https://developers.google.com/blockly/xml">' + xml + '</xml>';
-  var dom = Blockly.Xml.textToDom(xml);
-  console.time('Spaghetti domToWorkspace');
-  Blockly.Xml.domToWorkspace(dom, workspace);
-  console.timeEnd('Spaghetti domToWorkspace');
-}
-var spaghettiXml = [
-  '  <block type="controls_if">',
-  '    <value name="IF0">',
-  '      <block type="logic_compare">',
-  '        <field name="OP">EQ</field>',
-  '        <value name="A">',
-  '          <block type="math_arithmetic">',
-  '            <field name="OP">MULTIPLY</field>',
-  '            <value name="A">',
-  '              <block type="math_number">',
-  '                <field name="NUM">6</field>',
-  '              </block>',
-  '            </value>',
-  '            <value name="B">',
-  '              <block type="math_number">',
-  '                <field name="NUM">7</field>',
-  '              </block>',
-  '            </value>',
-  '          </block>',
-  '        </value>',
-  '        <value name="B">',
-  '          <block type="math_number">',
-  '            <field name="NUM">42</field>',
-  '          </block>',
-  '        </value>',
-  '      </block>',
-  '    </value>',
-  '    <statement name="DO0"></statement>',
-  '    <next></next>',
-  '  </block>'].join('\n');
-
 </script>
 
 <style>
@@ -376,9 +250,10 @@ var spaghettiXml = [
     font-size: 140%;
   }
   #blocklyDiv {
-    float: right;
+    float: left;
     height: 95%;
     width: 70%;
+    margin-right: 10px;
   }
   #importExport {
     font-family: monospace;
@@ -413,51 +288,20 @@ var spaghettiXml = [
 
   <div id="blocklyDiv"></div>
 
-  <h1>Blockly Playground</h1>
+  <h1>Blocks-To-Code</h1>
 
-  <p><a href="javascript:void(workspace.setVisible(true))">Show</a>
-   - <a href="javascript:void(workspace.setVisible(false))">Hide</a>
-  </p>
-
-  <!-- <form id="options">
-    <select name="dir" onchange="document.forms.options.submit()">
-      <option value="ltr">LTR</option>
-      <option value="rtl">RTL</option>
-    </select>
-    <select name="toolbox" onchange="document.forms.options.submit()">
-      <option value="categories">Categories (untyped variables)</option>
-      <option value="categories-typed-variables">Categories (typed variables)</option>
-      <option value="simple">Simple</option>
-      <option value="test-blocks">Test Blocks</option>
-    </select>
-  </form> -->
   <p>
     <input type="button" value="Export to XML" onclick="toXml()">
     &nbsp;
     <input type="button" value="Import from XML" onclick="fromXml()" id="import">
-    &nbsp;
+    <br>
     <input type="button" value="Generate Python" onclick="toCode('Python')">
+    <input type="button" value="Run Javascript" onclick="toCode('JavaScript')">
     <br>
     <textarea id="importExport" style="width: 26%; height: 12em"
       onchange="taChange();" onkeyup="taChange()"></textarea>
   </p>
-
-  <p>
-    Stress test: &nbsp;
-    <input type="button" value="Airstrike!" onclick="airstrike(100)">
-    <input type="button" value="Spaghetti!" onclick="spaghetti(8)">
-    <input type="button" value="Say to Print" onclick="randomtest(1)">
-  </p>
-  <ul class="playgroundToggleOptions">
-    <li>
-      <label for="logCheck">Log main workspace events:</label>
-      <input type="checkbox" onclick="logEvents(this.checked)" id="logCheck">
-    </li>
-    <li>
-    <label for="logFlyoutCheck">Log flyout events:</label>
-    <input type="checkbox" onclick="logFlyoutEvents(this.checked)" id="logFlyoutCheck">
-  </li>
-  </ul>
+  <!-- <input type="button" value="Say to Print" onclick="randomtest(1)"> -->
 
   <!-- toolbox-categories has a category menu and an auto-closing flyout.  The
   Variables category uses untyped variable blocks.
@@ -473,7 +317,7 @@ var spaghettiXml = [
       </block>
     </category>
     <category name="Events" colour="#FFD500" secondaryColour="#CC9900">
-      <block type="event_whenflagclicked"/>
+      <block type="event_whenflagclicked"></block>
     </category>
     <category name="Control" colour="#FFAB19" secondaryColour="#CF8B17">
       <label text="Scene" web-icon-color="#fff" web-icon="" web-icon-class="blocklyTreeIconscene" web-class="blocklyFlyoutHeading"></label>
@@ -761,9 +605,9 @@ var spaghettiXml = [
       <block type="lists_sort"></block>
       <block type="lists_reverse"></block>
     </category>
-    <category name="Functions" colour="#FF6680"
-    secondaryColour="#FF4D6A" custom="PROCEDURE"></category>
+    <category name="Functions" colour="#FF6680" secondaryColour="#FF4D6A" custom="PROCEDURE"></category>
   </xml>
+
 
 </body>
 </html>
