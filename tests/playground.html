@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <title>PXT Blockly Playground</title>
+<script src="transitions.js"></script>
+
 <script src="../blockly_uncompressed.js"></script>
 <script src="../generators/javascript.js"></script>
 <script src="../generators/javascript/event.js"></script>
@@ -15,17 +17,6 @@
 <script src="../generators/javascript/variables.js"></script>
 <script src="../generators/javascript/variables_dynamic.js"></script>
 <script src="../generators/javascript/procedures.js"></script>
-<script src="../generators/python.js"></script>
-<script src="../generators/python/event.js"></script>
-<script src="../generators/python/logic.js"></script>
-<script src="../generators/python/loops.js"></script>
-<script src="../generators/python/math.js"></script>
-<script src="../generators/python/text.js"></script>
-<script src="../generators/python/lists.js"></script>
-<script src="../generators/python/colour.js"></script>
-<script src="../generators/python/variables.js"></script>
-<script src="../generators/python/variables_dynamic.js"></script>
-<script src="../generators/python/procedures.js"></script>
 
 <script src="../msg/messages.js"></script>
 <!-- pxt-blockly -->
@@ -42,6 +33,9 @@
 <script src="../blocks/event.js"></script>
 <script src="../blocks/pxt_blockly_functions.js"></script>
 
+<script src="../node_modules/@blockly/plugin-workspace-search/dist/index.js"></script>
+<script src="../node_modules/@blockly/continuous-toolbox/dist/index.js"></script>
+
 <script src="./playgrounds/screenshot.js"></script>
 <script src="../node_modules/@blockly/block-test/dist/index.js"></script>
 
@@ -54,9 +48,15 @@ goog.require('Blockly.WorkspaceCommentSvg.render');
 'use strict';
 var workspace = null;
 
+function clearOutput() {
+  console.log = function(message) {
+    document.getElementById('result').innerHTML = `${document.getElementById('result').innerHTML}<br>${message}`;
+  };
+  document.getElementById('result').innerHTML = ''
+}
+
 function start() {
   setBackgroundColour();
-
   // Parse the URL arguments.
   var match = location.search.match(/dir=([^&]+)/);
   var rtl = match && match[1] == 'rtl';
@@ -82,6 +82,11 @@ function start() {
           drag: true,
           wheel: true,
         },
+        plugins: {
+          toolbox: ContinuousToolbox,
+          flyoutsVerticalToolbox: ContinuousFlyout,
+          metricsManager: ContinuousMetrics,
+        },
         toolbox: toolbox,
         toolboxPosition: 'start',
         renderer: 'pxt',
@@ -93,9 +98,12 @@ function start() {
             maxScale: 4,
             minScale: 0.25,
             scaleSpeed: 1.1
-          }
+          },
+
       });
   initToolbox(workspace);
+  var workspaceSearch = new WorkspaceSearch(workspace);
+  workspaceSearch.init();   
   workspace.configureContextMenu = configureContextMenu;
   // Restore previously displayed text.
   if (sessionStorage) {
@@ -126,18 +134,7 @@ function getToolboxSuffix() {
 }
 
 function getToolboxElement() {
-  var toolboxSuffix = getToolboxSuffix();
-  if (toolboxSuffix == 'test-blocks') {
-    if (typeof window.toolboxTestBlocks !== 'undefined') {
-      return toolboxTestBlocks;
-    } else {
-      alert('You need to run \'npm install\' in order to use the test blocks.');
-      toolboxSuffix = 'categories';
-    }
-  }
-  // The three possible values are: "simple", "categories",
-  // "categories-typed-variables".
-  return document.getElementById('toolbox-' + toolboxSuffix);
+  return document.getElementById('toolbox-categories');
 }
 
 function initToolbox(workspace) {
@@ -233,6 +230,35 @@ function randomtest(n) {
   Blockly.Xml.domToWorkspace(xml, workspace);
 }
 
+function addBlock() {
+  // get selection value
+  var select = document.getElementById('block-selector');
+  var value = select.options[select.selectedIndex].value;
+
+  var toolbox = getToolboxElement();
+
+  if (value === 'if') {
+    unlockExpandingIf();
+  } else if (value === 'compare') {
+    unlockPythonComparators();
+  } else if (value === 'while') {
+    unlockWhile();
+  } else {
+    console.log(value)
+  }
+
+  //test
+  //var r = '<block type="controls_whileUntil"></block>'
+  //var dom = Blockly.Xml.textToDom(r)
+  //toolbox.children.Events.appendChild(dom)
+  workspace.updateToolbox(toolbox);
+  workspace.refreshToolboxSelection()
+
+  var xml = Blockly.Xml.workspaceToDom(workspace);
+  workspace.clear();
+  Blockly.Xml.domToWorkspace(xml, workspace);
+}
+
 
 </script>
 
@@ -295,13 +321,25 @@ function randomtest(n) {
     &nbsp;
     <input type="button" value="Import from XML" onclick="fromXml()" id="import">
     <br>
-    <input type="button" value="Generate Python" onclick="toCode('Python')">
-    <input type="button" value="Run Javascript" onclick="toCode('JavaScript')">
+    <input type="button" value="Generate & Run Javascript" onclick="toCode('JavaScript')">
     <br>
     <textarea id="importExport" style="width: 26%; height: 12em"
       onchange="taChange();" onkeyup="taChange()"></textarea>
   </p>
   <!-- <input type="button" value="Say to Print" onclick="randomtest(1)"> -->
+  <p>
+    <select name="block-selector" id="block-selector">
+      <option value="if">if upgrade</option>
+      <option value="while">while upgrade</option>
+      <option value="compare">comparison operator upgrade</option>
+      <option value="dummy">dummy</option>
+    </select>
+    <input type="button" value="Add New Block" onclick="addBlock()">
+  </p>
+  <p>
+    <input type="button" value="Clear Console" onclick="clearOutput()">
+    <div id="result"></div>
+  </p>
 
   <!-- toolbox-categories has a category menu and an auto-closing flyout.  The
   Variables category uses untyped variable blocks.
@@ -320,7 +358,6 @@ function randomtest(n) {
       <block type="event_whenflagclicked"></block>
     </category>
     <category name="Control" colour="#FFAB19" secondaryColour="#CF8B17">
-      <label text="Scene" web-icon-color="#fff" web-icon="" web-icon-class="blocklyTreeIconscene" web-class="blocklyFlyoutHeading"></label>
       <block type="controls_repeat_ext">
         <value name="TIMES">
           <shadow type="math_number">
@@ -331,7 +368,7 @@ function randomtest(n) {
       <block type="controls_whileUntil"></block>
       <block type="controls_if"></block>
       <block type="controls_ifelse"></block>
-      <block type="controls_for" disabled="true">
+      <!-- <block type="controls_for" disabled="true">
         <value name="FROM">
           <shadow type="math_number">
             <field name="NUM">1</field>
@@ -349,32 +386,34 @@ function randomtest(n) {
         </value>
       </block>
       <block type="controls_forEach" disabled="true"></block>
-      <block type="controls_flow_statements" disabled="true"></block>
+      <block type="controls_flow_statements" disabled="true"></block> -->
     </category>
     <category name="Sensing" colour="#4CBFE6" secondaryColour="#2E8EB8">
-      <block type="text"></block>
+      <!-- <block type="text"></block> -->
       <!-- <block type="text_multiline"></block> -->
-      <block type="text_join"></block>
-      <block type="text_append">
+      <block id="askandwait" type="sensing_askandwait">
         <value name="TEXT">
-          <shadow type="text"></shadow>
-        </value>
-      </block>
-      <block type="text_length">
-        <value name="VALUE">
           <shadow type="text">
-            <field name="TEXT">abc</field>
+            <field name="TEXT">What's your name?</field>
           </shadow>
         </value>
       </block>
-      <block type="text_isEmpty">
+      <block id="answer" type="sensing_answer"></block>
+
+      <!-- <block type="text_append">
+        <value name="TEXT">
+          <shadow type="text"></shadow>
+        </value>
+      </block> -->
+
+      <!-- <block type="text_isEmpty">
         <value name="VALUE">
           <shadow type="text">
             <field name="TEXT"></field>
           </shadow>
         </value>
-      </block>
-      <block type="text_indexOf">
+      </block> -->
+      <!-- <block type="text_indexOf">
         <value name="VALUE">
           <block type="variables_get">
             <field name="VAR">text</field>
@@ -386,21 +425,15 @@ function randomtest(n) {
           </shadow>
         </value>
       </block>
-      <block type="text_charAt">
-        <value name="VALUE">
-          <block type="variables_get">
-            <field name="VAR">text</field>
-          </block>
-        </value>
-      </block>
+
       <block type="text_getSubstring">
         <value name="STRING">
           <block type="variables_get">
             <field name="VAR">text</field>
           </block>
         </value>
-      </block>
-      <block type="text_changeCase">
+      </block> -->
+      <!-- <block type="text_changeCase">
         <value name="TEXT">
           <shadow type="text">
             <field name="TEXT">abc</field>
@@ -413,8 +446,8 @@ function randomtest(n) {
             <field name="TEXT">abc</field>
           </shadow>
         </value>
-      </block>
-      <block type="text_count">
+      </block> -->
+      <!-- <block type="text_count">
         <value name="SUB">
           <shadow type="text"></shadow>
         </value>
@@ -437,92 +470,26 @@ function randomtest(n) {
         <value name="TEXT">
           <shadow type="text"></shadow>
         </value>
-      </block>
+      </block> -->
 
-      <block type="text_prompt_ext">
+      <!-- <block type="text_prompt_ext" >
         <value name="TEXT">
           <shadow type="text">
             <field name="TEXT">What's your name?</field>
           </shadow>
         </value>
-      </block>
+      </block> -->
     </category>
     <category name="Operators" colour="#40BF4A" secondaryColour="#389438">
-      <block type="logic_compare"></block>
-      <block type="logic_operation" disabled="true"></block>
-      <block type="logic_negate" disabled="true"></block>
-      <block type="logic_boolean" disabled="true"></block>
-      <block type="math_number" gap="32">
-        <field name="NUM">123</field>
-      </block>
       <block type="math_arithmetic">
         <value name="A">
           <shadow type="math_number">
-            <field name="NUM">1</field>
+            <field name="NUM"></field>
           </shadow>
         </value>
         <value name="B">
           <shadow type="math_number">
-            <field name="NUM">1</field>
-          </shadow>
-        </value>
-      </block>
-      <block type="math_single">
-        <value name="NUM">
-          <shadow type="math_number">
-            <field name="NUM">9</field>
-          </shadow>
-        </value>
-      </block>
-      <block type="math_trig">
-        <value name="NUM">
-          <shadow type="math_number">
-            <field name="NUM">45</field>
-          </shadow>
-        </value>
-      </block>
-      <block type="math_constant"></block>
-      <block type="math_number_property">
-        <value name="NUMBER_TO_CHECK">
-          <shadow type="math_number">
-            <field name="NUM">0</field>
-          </shadow>
-        </value>
-      </block>
-      <block type="math_round">
-        <value name="NUM">
-          <shadow type="math_number">
-            <field name="NUM">3.1</field>
-          </shadow>
-        </value>
-      </block>
-      <block type="math_on_list"></block>
-      <block type="math_modulo">
-        <value name="DIVIDEND">
-          <shadow type="math_number">
-            <field name="NUM">64</field>
-          </shadow>
-        </value>
-        <value name="DIVISOR">
-          <shadow type="math_number">
-            <field name="NUM">10</field>
-          </shadow>
-        </value>
-      </block>
-      <block type="math_constrain">
-        <value name="VALUE">
-          <shadow type="math_number">
-            <field name="NUM">50</field>
-          </shadow>
-        </value>
-        <value name="LOW">
-          <shadow type="math_number">
-            <field name="NUM">1</field>
-          </shadow>
-        </value>
-        <value name="HIGH">
-          <shadow type="math_number">
-            <field name="NUM">100</field>
+            <field name="NUM"></field>
           </shadow>
         </value>
       </block>
@@ -538,42 +505,73 @@ function randomtest(n) {
           </shadow>
         </value>
       </block>
-      <block type="math_random_float"></block>
-      <block type="math_atan2">
-        <value name="X">
+      <block type="logic_compare">
+        <value name="A">
           <shadow type="math_number">
-            <field name="NUM">1</field>
+            <field name="NUM"></field>
           </shadow>
         </value>
-        <value name="Y">
+        <value name="B">
           <shadow type="math_number">
-            <field name="NUM">1</field>
+            <field name="NUM">50</field>
           </shadow>
         </value>
       </block>
+      <block type="logic_operation" ></block>
+      <block type="logic_negate" ></block>
+      <block type="text_join">
+        <value name="FIRST">
+          <shadow type="text">
+            <field name="TEXT">abc</field>
+          </shadow>
+        </value>
+        <value name="SECOND">
+          <shadow type="text">
+            <field name="TEXT">abc</field>
+          </shadow>
+        </value>
+      </block>
+      <!-- <block type="text_length">
+        <value name="VALUE">
+          <shadow type="text">
+            <field name="TEXT">abc</field>
+          </shadow>
+        </value>
+      </block> -->
+      <!-- <block type="text_charAt">
+        <value name="VALUE">
+          <shadow type="text">
+            <field name="TEXT"></field>
+          </shadow>
+        </value>
+        <value name="AT">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+      </block> -->
     </category>
     <category name="Variables" colour="#FF8C1A" secondaryColour="#DB6E00" custom="VARIABLE"></category>
     <category name="List" colour="#FF8C1A" secondaryColour="#DB6E00">
       <block type="lists_create_with">
         <mutation items="0"></mutation>
       </block>
-      <block type="lists_create_with"></block>
-      <block type="lists_repeat">
-        <value name="NUM">
-          <shadow type="math_number">
-            <field name="NUM">5</field>
-          </shadow>
-        </value>
-      </block>
-      <block type="lists_length"></block>
-      <block type="lists_isEmpty"></block>
-      <block type="lists_indexOf">
+      <!-- <block type="lists_create_with"></block> -->
+      <block type="lists_length">
         <value name="VALUE">
           <block type="variables_get">
             <field name="VAR">list</field>
           </block>
         </value>
       </block>
+      <!-- <block type="lists_isEmpty"></block>
+      <block type="lists_indexOf">
+        <value name="VALUE">
+          <block type="variables_get">
+            <field name="VAR">list</field>
+          </block>
+        </value>
+      </block> -->
       <block type="lists_getIndex">
         <value name="VALUE">
           <block type="variables_get">
@@ -588,7 +586,7 @@ function randomtest(n) {
           </block>
         </value>
       </block>
-      <block type="lists_getSublist">
+      <!-- <block type="lists_getSublist">
         <value name="LIST">
           <block type="variables_get">
             <field name="VAR">list</field>
@@ -603,7 +601,7 @@ function randomtest(n) {
         </value>
       </block>
       <block type="lists_sort"></block>
-      <block type="lists_reverse"></block>
+      <block type="lists_reverse"></block> -->
     </category>
     <category name="Functions" colour="#FF6680" secondaryColour="#FF4D6A" custom="PROCEDURE"></category>
   </xml>
