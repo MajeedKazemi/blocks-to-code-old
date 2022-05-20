@@ -37,6 +37,8 @@ Blockly.JavaScript['math_arithmetic'] = function(block) {
   var order = tuple[1];
   var argument0 = Blockly.JavaScript.valueToCode(block, 'A', order) || '0';
   var argument1 = Blockly.JavaScript.valueToCode(block, 'B', order) || '0';
+  argument0 = isNaN(parseFloat(eval(argument0))) ? argument0 : `parseInt(${argument0})`;
+  argument1 = isNaN(parseFloat(eval(argument1))) ? argument1 : `parseInt(${argument1})`;
   var code;
   // Power in JavaScript requires a special case since it has no operator.
   if (!operator) {
@@ -389,6 +391,9 @@ Blockly.JavaScript['math_random_int'] = function(block) {
        '  }',
        '  return Math.floor(Math.random() * (b - a + 1) + a);',
        '}']);
+  argument0 = Blockly.JavaScript.math.convertFloat_(argument0)
+  argument1 = Blockly.JavaScript.math.convertFloat_(argument1)
+
   var code = functionName + '(' + argument0 + ', ' + argument1 + ')';
   return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
 };
@@ -406,4 +411,12 @@ Blockly.JavaScript['math_atan2'] = function(block) {
       Blockly.JavaScript.ORDER_NONE) || '0';
   return ['Math.atan2(' + argument1 + ', ' + argument0 + ') / Math.PI * 180',
       Blockly.JavaScript.ORDER_DIVISION];
+};
+
+Blockly.JavaScript.math.convertFloat_ = (value) => { 
+  return isNaN(parseFloat(eval(value))) ? value : `parseFloat(${value})`;
+};
+
+Blockly.JavaScript.math.convertInt_ = (value) => { 
+  return isNaN(parseInt(eval(value))) ? value : `parseInt(${value})`;
 };
