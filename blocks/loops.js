@@ -41,7 +41,6 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
     "args0": [{
       "type": "input_value",
       "name": "TIMES",
-      "check": "Number"
     }],
     "message1": " %1",
     "args1": [{

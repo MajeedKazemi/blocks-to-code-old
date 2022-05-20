@@ -130,7 +130,6 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
       {
         "type": "input_value",
         "name": "A",
-        "check": "Number"
       },
       {
         "type": "field_dropdown",
@@ -139,18 +138,16 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
           ["%{BKY_MATH_ADDITION_SYMBOL}", "ADD"],
           ["%{BKY_MATH_SUBTRACTION_SYMBOL}", "MINUS"],
           ["%{BKY_MATH_MULTIPLICATION_SYMBOL}", "MULTIPLY"],
-          ["%{BKY_MATH_DIVISION_SYMBOL}", "DIVIDE"],
-          ["%{BKY_MATH_POWER_SYMBOL}", "POWER"]
+          ["%{BKY_MATH_DIVISION_SYMBOL}", "DIVIDE"]
         ]
       },
       {
         "type": "input_value",
         "name": "B",
-        "check": "Number"
       }
     ],
     "inputsInline": true,
-    "output": "Number",
+    "output": "Pizza",
     "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
     "style": "math_blocks",
     "helpUrl": "%{BKY_MATH_ARITHMETIC_HELPURL}",
@@ -178,7 +175,6 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
       {
         "type": "input_value",
         "name": "NUM",
-        "check": "Number"
       }
     ],
     "output": "Number",
@@ -208,7 +204,6 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
       {
         "type": "input_value",
         "name": "NUM",
-        "check": "Number"
       }
     ],
     "output": "Number",
@@ -252,7 +247,6 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
       {
         "type": "input_value",
         "name": "NUMBER_TO_CHECK",
-        "check": "Number"
       },
       {
         "type": "field_dropdown",
@@ -289,7 +283,6 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
       {
         "type": "input_value",
         "name": "DELTA",
-        "check": "Number"
       }
     ],
     "previousStatement": null,
@@ -316,7 +309,6 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
       {
         "type": "input_value",
         "name": "NUM",
-        "check": "Number"
       }
     ],
     "output": "Number",
@@ -349,7 +341,6 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
       {
         "type": "input_value",
         "name": "LIST",
-        "check": "Array"
       }
     ],
     "output": "Number",
@@ -368,12 +359,10 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
       {
         "type": "input_value",
         "name": "DIVIDEND",
-        "check": "Number"
       },
       {
         "type": "input_value",
         "name": "DIVISOR",
-        "check": "Number"
       }
     ],
     "inputsInline": true,
@@ -392,17 +381,14 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
       {
         "type": "input_value",
         "name": "VALUE",
-        "check": "Number"
       },
       {
         "type": "input_value",
         "name": "LOW",
-        "check": "Number"
       },
       {
         "type": "input_value",
         "name": "HIGH",
-        "check": "Number"
       }
     ],
     "inputsInline": true,
@@ -421,12 +407,10 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
       {
         "type": "input_value",
         "name": "FROM",
-        "check": "Number"
       },
       {
         "type": "input_value",
         "name": "TO",
-        "check": "Number"
       }
     ],
     "inputsInline": true,
@@ -456,12 +440,10 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
       {
         "type": "input_value",
         "name": "X",
-        "check": "Number"
       },
       {
         "type": "input_value",
         "name": "Y",
-        "check": "Number"
       }
     ],
     "inputsInline": true,
@@ -559,8 +541,7 @@ Blockly.Constants.Math.IS_DIVISIBLEBY_MUTATOR_MIXIN = {
     var inputExists = this.getInput('DIVISOR');
     if (divisorInput) {
       if (!inputExists) {
-        this.appendValueInput('DIVISOR')
-            .setCheck('Number');
+        this.appendValueInput('DIVISOR');
       }
     } else if (inputExists) {
       this.removeInput('DIVISOR');

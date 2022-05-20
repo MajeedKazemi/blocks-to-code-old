@@ -75,14 +75,22 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
   },
   {
     "type": "text_join",
-    "message0": "",
+    "message0": "join %1 %2",
+    "args0": [{
+      "type": "input_value",
+      "name": "FIRST",
+    },
+    {
+      "type": "input_value",
+      "name": "SECOND",
+    }
+    ],
+    "inputsInline": true,
     "output": "String",
     "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
     "style": "math_blocks",
     "helpUrl": "%{BKY_TEXT_JOIN_HELPURL}",
     "tooltip": "%{BKY_TEXT_JOIN_TOOLTIP}",
-    "mutator": "text_join_mutator"
-
   },
   {
     "type": "text_create_join_container",
@@ -133,12 +141,11 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
       {
         "type": "input_value",
         "name": "VALUE",
-        "check": ['String', 'Array']
       }
     ],
     "output": 'Number',
     "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
-    "style": "text_blocks",
+    "style": "math_blocks",
     "tooltip": "%{BKY_TEXT_LENGTH_TOOLTIP}",
     "helpUrl": "%{BKY_TEXT_LENGTH_HELPURL}"
   },
@@ -202,8 +209,7 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
     "args0": [
       {
         "type":"input_value",
-        "name": "VALUE",
-        "check": "String"
+        "name": "VALUE"
       },
       {
         "type": "field_dropdown",
@@ -219,7 +225,7 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
     ],
     "output": "String",
     "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
-    "style": "text_blocks",
+    "style": "math_blocks",
     "helpUrl": "%{BKY_TEXT_CHARAT_HELPURL}",
     "inputsInline": true,
     "mutator": "text_charAt_mutator"
@@ -404,6 +410,49 @@ Blockly.Blocks['text_print'] = {
       "tooltip": Blockly.Msg['TEXT_PRINT_TOOLTIP'],
       "helpUrl": Blockly.Msg['TEXT_PRINT_HELPURL']
     });
+  }
+};
+
+Blockly.Msg.SENSING_ASKANDWAIT = 'ask %1 and wait';
+Blockly.Msg.SENSING_ANSWER = 'answer';
+
+// Taken from scratch-blocks
+Blockly.Blocks['sensing_askandwait'] = {
+  /**
+   * Block to ask a question and wait
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": Blockly.Msg.SENSING_ASKANDWAIT,
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "TEXT"
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+    });
+
+    this.setStyle('sensing_blocks');
+  }
+};
+
+Blockly.Blocks['sensing_answer'] = {
+  /**
+   * Block to report answer
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.jsonInit({
+      "message0": Blockly.Msg.SENSING_ANSWER,
+      "checkboxInFlyout": true,
+    });
+
+    this.setStyle('sensing_blocks');
+    this.setOutput(true, 'String');
+    this.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND);
   }
 };
 
@@ -672,244 +721,244 @@ Blockly.Constants.Text.QUOTE_IMAGE_MIXIN = {
 //   this.quoteField_('TEXT');
 // };
 
-/**
- * Mixin for mutator functions in the 'text_join_mutator' extension.
- * @mixin
- * @augments Blockly.Block
- * @package
- */
-Blockly.Constants.Text.TEXT_JOIN_MUTATOR_MIXIN = {
-  /**
-   * Create XML to represent number of text inputs.
-   * @return {!Element} XML storage element.
-   * @this {Blockly.Block}
-   */
-  mutationToDom: function() {
-    var container = Blockly.utils.xml.createElement('mutation');
-    container.setAttribute('items', this.itemCount_);
-    return container;
-  },
-  /**
-   * Parse XML to restore the text inputs.
-   * @param {!Element} xmlElement XML storage element.
-   * @this {Blockly.Block}
-   */
-  domToMutation: function(xmlElement) {
-    this.itemCount_ = parseInt(xmlElement.getAttribute('items'), 10);
-    this.updateShape_();
-  },
-  // /**
-  //  * Populate the mutator's dialog with this block's components.
-  //  * @param {!Blockly.Workspace} workspace Mutator's workspace.
-  //  * @return {!Blockly.Block} Root block in mutator.
-  //  * @this {Blockly.Block}
-  //  */
-  // decompose: function(workspace) {
-  //   var containerBlock = workspace.newBlock('text_create_join_container');
-  //   containerBlock.initSvg();
-  //   var connection = containerBlock.getInput('STACK').connection;
-  //   for (var i = 0; i < this.itemCount_; i++) {
-  //     var itemBlock = workspace.newBlock('text_create_join_item');
-  //     itemBlock.initSvg();
-  //     connection.connect(itemBlock.previousConnection);
-  //     connection = itemBlock.nextConnection;
-  //   }
-  //   return containerBlock;
-  // },
-  // /**
-  //  * Reconfigure this block based on the mutator dialog's components.
-  //  * @param {!Blockly.Block} containerBlock Root block in mutator.
-  //  * @this {Blockly.Block}
-  //  */
-  // compose: function(containerBlock) {
-  //   var itemBlock = containerBlock.getInputTargetBlock('STACK');
-  //   // Count number of inputs.
-  //   var connections = [];
-  //   while (itemBlock && !itemBlock.isInsertionMarker()) {
-  //     connections.push(itemBlock.valueConnection_);
-  //     itemBlock = itemBlock.nextConnection &&
-  //         itemBlock.nextConnection.targetBlock();
-  //   }
-  //   // Disconnect any children that don't belong.
-  //   for (var i = 0; i < this.itemCount_; i++) {
-  //     var connection = this.getInput('ADD' + i).connection.targetConnection;
-  //     if (connection && connections.indexOf(connection) == -1) {
-  //       connection.disconnect();
-  //     }
-  //   }
-  //   this.itemCount_ = connections.length;
-  //   this.updateShape_();
-  //   // Reconnect any child blocks.
-  //   for (var i = 0; i < this.itemCount_; i++) {
-  //     Blockly.Mutator.reconnect(connections[i], this, 'ADD' + i);
-  //   }
-  // },
-  /**
-   * Store pointers to any connected child blocks.
-   * @param {!Blockly.Block} containerBlock Root block in mutator.
-   * @this {Blockly.Block}
-   */
-  saveConnections: function(containerBlock) {
-    var itemBlock = containerBlock.getInputTargetBlock('STACK');
-    var i = 0;
-    while (itemBlock) {
-      var input = this.getInput('ADD' + i);
-      itemBlock.valueConnection_ = input && input.connection.targetConnection;
-      i++;
-      itemBlock = itemBlock.nextConnection &&
-          itemBlock.nextConnection.targetBlock();
-    }
-  },
-  storeValueConnections_: function() {
-    this.valueConnections_ = [];
-    for (var i = 0; i < this.itemCount_; i++) {
-      this.valueConnections_.push(this.getInput('ADD' + i).connection.targetConnection);
-    }
-  },
-  restoreValueConnections_: function() {
-    for (var i = 0; i < this.itemCount_; i++) {
-      Blockly.Mutator.reconnect(this.valueConnections_[i], this, 'ADD' + i);
-    }
-  },
-  addItem_: function() {
-    this.storeValueConnections_();
-    var update = function() {
-      this.itemCount_++;
-    };
-    this.update_(update);
-    this.restoreValueConnections_();
-    // Add shadow block
-    if (this.itemCount_ > 1) {
-      // Find shadow type
-      var firstInput = this.getInput('ADD' + 0);
-      if (firstInput && firstInput.connection.targetConnection) {
-        // Create a new shadow DOM with the same type as the first input
-        // but with an empty default value
-        var newInput = this.getInput('ADD' + (this.itemCount_ - 1));
-        var shadowInputDom = firstInput.connection.getShadowDom();
-        if (shadowInputDom) {
-          var shadowDom = Blockly.utils.xml.createElement('shadow');
-          var shadowInputType = shadowInputDom.getAttribute('type');
-          shadowDom.setAttribute('type', shadowInputType);
-          if (shadowDom) {
-            shadowDom.setAttribute('id', Blockly.utils.genUid());
-            newInput.connection.setShadowDom(shadowDom);
-            newInput.connection.respawnShadow_();
-          }
-        }
-      }
-    }
-  },
-  removeItem_: function() {
-    this.storeValueConnections_();
-    var update = function() {
-      this.itemCount_--;
-    };
-    this.update_(update);
-    this.restoreValueConnections_();
-  },
-  update_: function(update) {
-    Blockly.Events.setGroup(true);
-    var block = this;
-    var oldMutationDom = block.mutationToDom();
-    var oldMutation = oldMutationDom && Blockly.Xml.domToText(oldMutationDom);
-    // Switch off rendering while the source block is rebuilt.
-    var savedRendered = block.rendered;
-    block.rendered = false;
-    // Update the mutation
-    if (update) update.call(this);
-    // Allow the source block to rebuild itself.
-    this.updateShape_();
-    // Restore rendering and show the changes.
-    block.rendered = savedRendered;
-    // Mutation may have added some elements that need initializing.
-    block.initSvg();
-    // Ensure that any bump is part of this mutation's event group.
-    var group = Blockly.Events.getGroup();
-    var newMutationDom = block.mutationToDom();
-    var newMutation = newMutationDom && Blockly.Xml.domToText(newMutationDom);
-    if (oldMutation != newMutation) {
-      Blockly.Events.fire(new Blockly.Events.BlockChange(
-          block, 'mutation', null, oldMutation, newMutation));
-      setTimeout(function() {
-        Blockly.Events.setGroup(group);
-        block.bumpNeighbours();
-        Blockly.Events.setGroup(false);
-      }, Blockly.BUMP_DELAY);
-    }
-    if (block.rendered) {
-      block.render();
-    }
-    Blockly.Events.setGroup(false);
-  },
-  /**
-   * Modify this block to have the correct number of inputs.
-   * @private
-   * @this {Blockly.Block}
-   */
-  updateShape_: function() {
-    var that = this;
-    var add = function() {
-      that.addItem_();
-    };
-    var remove = function() {
-      that.removeItem_();
-    };
-    // pxt-blockly: our join block can't be empty
-    if (this.getInput('EMPTY')) {
-      this.removeInput('EMPTY');
-    }
-    if (!this.getInput('TITLE')) {
-      this.appendDummyInput('TITLE')
-            .appendField(Blockly.Msg['TEXT_JOIN_TITLE_CREATEWITH']);
-    }
-    // Add new inputs.
-    for (var i = 0; i < this.itemCount_; i++) {
-      if (!this.getInput('ADD' + i)) {
-        var input = this.appendValueInput('ADD' + i)
-        // pxt-blockly: pxt-blockly/pull/112
-            .setAlign(Blockly.ALIGN_LEFT);
-        // if (i == 0) {
-        //   input.appendField(Blockly.Msg['TEXT_JOIN_TITLE_CREATEWITH']);
-        // }
-      }
-    }
-    // Remove deleted inputs.
-    while (this.getInput('ADD' + i)) {
-      this.removeInput('ADD' + i);
-      i++;
-    }
+// /**
+//  * Mixin for mutator functions in the 'text_join_mutator' extension.
+//  * @mixin
+//  * @augments Blockly.Block
+//  * @package
+//  */
+// Blockly.Constants.Text.TEXT_JOIN_MUTATOR_MIXIN = {
+//   /**
+//    * Create XML to represent number of text inputs.
+//    * @return {!Element} XML storage element.
+//    * @this {Blockly.Block}
+//    */
+//   mutationToDom: function() {
+//     var container = Blockly.utils.xml.createElement('mutation');
+//     container.setAttribute('items', this.itemCount_);
+//     return container;
+//   },
+//   /**
+//    * Parse XML to restore the text inputs.
+//    * @param {!Element} xmlElement XML storage element.
+//    * @this {Blockly.Block}
+//    */
+//   domToMutation: function(xmlElement) {
+//     this.itemCount_ = parseInt(xmlElement.getAttribute('items'), 10);
+//     this.updateShape_();
+//   },
+//   // /**
+//   //  * Populate the mutator's dialog with this block's components.
+//   //  * @param {!Blockly.Workspace} workspace Mutator's workspace.
+//   //  * @return {!Blockly.Block} Root block in mutator.
+//   //  * @this {Blockly.Block}
+//   //  */
+//   // decompose: function(workspace) {
+//   //   var containerBlock = workspace.newBlock('text_create_join_container');
+//   //   containerBlock.initSvg();
+//   //   var connection = containerBlock.getInput('STACK').connection;
+//   //   for (var i = 0; i < this.itemCount_; i++) {
+//   //     var itemBlock = workspace.newBlock('text_create_join_item');
+//   //     itemBlock.initSvg();
+//   //     connection.connect(itemBlock.previousConnection);
+//   //     connection = itemBlock.nextConnection;
+//   //   }
+//   //   return containerBlock;
+//   // },
+//   // /**
+//   //  * Reconfigure this block based on the mutator dialog's components.
+//   //  * @param {!Blockly.Block} containerBlock Root block in mutator.
+//   //  * @this {Blockly.Block}
+//   //  */
+//   // compose: function(containerBlock) {
+//   //   var itemBlock = containerBlock.getInputTargetBlock('STACK');
+//   //   // Count number of inputs.
+//   //   var connections = [];
+//   //   while (itemBlock && !itemBlock.isInsertionMarker()) {
+//   //     connections.push(itemBlock.valueConnection_);
+//   //     itemBlock = itemBlock.nextConnection &&
+//   //         itemBlock.nextConnection.targetBlock();
+//   //   }
+//   //   // Disconnect any children that don't belong.
+//   //   for (var i = 0; i < this.itemCount_; i++) {
+//   //     var connection = this.getInput('ADD' + i).connection.targetConnection;
+//   //     if (connection && connections.indexOf(connection) == -1) {
+//   //       connection.disconnect();
+//   //     }
+//   //   }
+//   //   this.itemCount_ = connections.length;
+//   //   this.updateShape_();
+//   //   // Reconnect any child blocks.
+//   //   for (var i = 0; i < this.itemCount_; i++) {
+//   //     Blockly.Mutator.reconnect(connections[i], this, 'ADD' + i);
+//   //   }
+//   // },
+//   /**
+//    * Store pointers to any connected child blocks.
+//    * @param {!Blockly.Block} containerBlock Root block in mutator.
+//    * @this {Blockly.Block}
+//    */
+//   saveConnections: function(containerBlock) {
+//     var itemBlock = containerBlock.getInputTargetBlock('STACK');
+//     var i = 0;
+//     while (itemBlock) {
+//       var input = this.getInput('ADD' + i);
+//       itemBlock.valueConnection_ = input && input.connection.targetConnection;
+//       i++;
+//       itemBlock = itemBlock.nextConnection &&
+//           itemBlock.nextConnection.targetBlock();
+//     }
+//   },
+//   storeValueConnections_: function() {
+//     this.valueConnections_ = [];
+//     for (var i = 0; i < this.itemCount_; i++) {
+//       this.valueConnections_.push(this.getInput('ADD' + i).connection.targetConnection);
+//     }
+//   },
+//   restoreValueConnections_: function() {
+//     for (var i = 0; i < this.itemCount_; i++) {
+//       Blockly.Mutator.reconnect(this.valueConnections_[i], this, 'ADD' + i);
+//     }
+//   },
+//   addItem_: function() {
+//     this.storeValueConnections_();
+//     var update = function() {
+//       this.itemCount_++;
+//     };
+//     this.update_(update);
+//     this.restoreValueConnections_();
+//     // Add shadow block
+//     if (this.itemCount_ > 1) {
+//       // Find shadow type
+//       var firstInput = this.getInput('ADD' + 0);
+//       if (firstInput && firstInput.connection.targetConnection) {
+//         // Create a new shadow DOM with the same type as the first input
+//         // but with an empty default value
+//         var newInput = this.getInput('ADD' + (this.itemCount_ - 1));
+//         var shadowInputDom = firstInput.connection.getShadowDom();
+//         if (shadowInputDom) {
+//           var shadowDom = Blockly.utils.xml.createElement('shadow');
+//           var shadowInputType = shadowInputDom.getAttribute('type');
+//           shadowDom.setAttribute('type', shadowInputType);
+//           if (shadowDom) {
+//             shadowDom.setAttribute('id', Blockly.utils.genUid());
+//             newInput.connection.setShadowDom(shadowDom);
+//             newInput.connection.respawnShadow_();
+//           }
+//         }
+//       }
+//     }
+//   },
+//   removeItem_: function() {
+//     this.storeValueConnections_();
+//     var update = function() {
+//       this.itemCount_--;
+//     };
+//     this.update_(update);
+//     this.restoreValueConnections_();
+//   },
+//   update_: function(update) {
+//     Blockly.Events.setGroup(true);
+//     var block = this;
+//     var oldMutationDom = block.mutationToDom();
+//     var oldMutation = oldMutationDom && Blockly.Xml.domToText(oldMutationDom);
+//     // Switch off rendering while the source block is rebuilt.
+//     var savedRendered = block.rendered;
+//     block.rendered = false;
+//     // Update the mutation
+//     if (update) update.call(this);
+//     // Allow the source block to rebuild itself.
+//     this.updateShape_();
+//     // Restore rendering and show the changes.
+//     block.rendered = savedRendered;
+//     // Mutation may have added some elements that need initializing.
+//     block.initSvg();
+//     // Ensure that any bump is part of this mutation's event group.
+//     var group = Blockly.Events.getGroup();
+//     var newMutationDom = block.mutationToDom();
+//     var newMutation = newMutationDom && Blockly.Xml.domToText(newMutationDom);
+//     if (oldMutation != newMutation) {
+//       Blockly.Events.fire(new Blockly.Events.BlockChange(
+//           block, 'mutation', null, oldMutation, newMutation));
+//       setTimeout(function() {
+//         Blockly.Events.setGroup(group);
+//         block.bumpNeighbours();
+//         Blockly.Events.setGroup(false);
+//       }, Blockly.BUMP_DELAY);
+//     }
+//     if (block.rendered) {
+//       block.render();
+//     }
+//     Blockly.Events.setGroup(false);
+//   },
+//   /**
+//    * Modify this block to have the correct number of inputs.
+//    * @private
+//    * @this {Blockly.Block}
+//    */
+//   updateShape_: function() {
+//     var that = this;
+//     var add = function() {
+//       that.addItem_();
+//     };
+//     var remove = function() {
+//       that.removeItem_();
+//     };
+//     // pxt-blockly: our join block can't be empty
+//     if (this.getInput('EMPTY')) {
+//       this.removeInput('EMPTY');
+//     }
+//     if (!this.getInput('TITLE')) {
+//       this.appendDummyInput('TITLE')
+//             .appendField(Blockly.Msg['TEXT_JOIN_TITLE_CREATEWITH']);
+//     }
+//     // Add new inputs.
+//     for (var i = 0; i < this.itemCount_; i++) {
+//       if (!this.getInput('ADD' + i)) {
+//         var input = this.appendValueInput('ADD' + i)
+//         // pxt-blockly: pxt-blockly/pull/112
+//             .setAlign(Blockly.ALIGN_LEFT);
+//         // if (i == 0) {
+//         //   input.appendField(Blockly.Msg['TEXT_JOIN_TITLE_CREATEWITH']);
+//         // }
+//       }
+//     }
+//     // Remove deleted inputs.
+//     while (this.getInput('ADD' + i)) {
+//       this.removeInput('ADD' + i);
+//       i++;
+//     }
 
-    // pxt-blockly: Use +/- buttons for mutation
-    if (this.getInput('BUTTONS')) this.removeInput('BUTTONS');
-    var buttons = this.appendDummyInput('BUTTONS');
-    if (this.itemCount_ > 1) {
-      buttons.appendField(new Blockly.FieldImage(this.REMOVE_IMAGE_DATAURI, 24, 24, "*", remove, false));
-    }
-    buttons.appendField(new Blockly.FieldImage(this.ADD_IMAGE_DATAURI, 24, 24, "*", add, false));
+//     // pxt-blockly: Use +/- buttons for mutation
+//     if (this.getInput('BUTTONS')) this.removeInput('BUTTONS');
+//     var buttons = this.appendDummyInput('BUTTONS');
+//     if (this.itemCount_ > 1) {
+//       buttons.appendField(new Blockly.FieldImage(this.REMOVE_IMAGE_DATAURI, 24, 24, "*", remove, false));
+//     }
+//     buttons.appendField(new Blockly.FieldImage(this.ADD_IMAGE_DATAURI, 24, 24, "*", add, false));
 
-    // Switch to vertical list when there are too many items
-    var horizontalLayout = this.itemCount_ <= 4;
-    this.setInputsInline(horizontalLayout);
-    this.setOutputShape(horizontalLayout ?
-      Blockly.OUTPUT_SHAPE_ROUND : Blockly.OUTPUT_SHAPE_SQUARE);
-  }
-};
+//     // Switch to vertical list when there are too many items
+//     var horizontalLayout = this.itemCount_ <= 4;
+//     this.setInputsInline(horizontalLayout);
+//     this.setOutputShape(horizontalLayout ?
+//       Blockly.OUTPUT_SHAPE_ROUND : Blockly.OUTPUT_SHAPE_SQUARE);
+//   }
+// };
 
-/**
- * Performs final setup of a text_join block.
- * @this {Blockly.Block}
- */
-Blockly.Constants.Text.TEXT_JOIN_EXTENSION = function() {
-  // Add the quote mixin for the itemCount_ = 0 case.
-  this.mixin(Blockly.Constants.Text.QUOTE_IMAGE_MIXIN);
-  // Initialize the mutator values.
-  Blockly.Extensions.apply('inline-svgs', this, false);
-  this.itemCount_ = 2;
-  this.updateShape_();
-  // Configure the mutator ui
-  //this.setMutator(new Blockly.Mutator(['text_create_join_item']));
-};
+// /**
+//  * Performs final setup of a text_join block.
+//  * @this {Blockly.Block}
+//  */
+// Blockly.Constants.Text.TEXT_JOIN_EXTENSION = function() {
+//   // Add the quote mixin for the itemCount_ = 0 case.
+//   this.mixin(Blockly.Constants.Text.QUOTE_IMAGE_MIXIN);
+//   // Initialize the mutator values.
+//   Blockly.Extensions.apply('inline-svgs', this, false);
+//   this.itemCount_ = 2;
+//   this.updateShape_();
+//   // Configure the mutator ui
+//   //this.setMutator(new Blockly.Mutator(['text_create_join_item']));
+// };
 
 // Update the tooltip of 'text_append' block to reference the variable.
 Blockly.Extensions.register('text_append_tooltip',

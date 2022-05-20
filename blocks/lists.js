@@ -489,16 +489,16 @@ Blockly.Blocks['lists_getIndex'] = {
     var MODE =
         [
           [Blockly.Msg['LISTS_GET_INDEX_GET'], 'GET'],
-          [Blockly.Msg['LISTS_GET_INDEX_GET_REMOVE'], 'GET_REMOVE'],
-          [Blockly.Msg['LISTS_GET_INDEX_REMOVE'], 'REMOVE']
+          // [Blockly.Msg['LISTS_GET_INDEX_GET_REMOVE'], 'GET_REMOVE'],
+          // [Blockly.Msg['LISTS_GET_INDEX_REMOVE'], 'REMOVE']
         ];
     this.WHERE_OPTIONS =
         [
           [Blockly.Msg['LISTS_GET_INDEX_FROM_START'], 'FROM_START'],
-          [Blockly.Msg['LISTS_GET_INDEX_FROM_END'], 'FROM_END'],
-          [Blockly.Msg['LISTS_GET_INDEX_FIRST'], 'FIRST'],
-          [Blockly.Msg['LISTS_GET_INDEX_LAST'], 'LAST'],
-          [Blockly.Msg['LISTS_GET_INDEX_RANDOM'], 'RANDOM']
+          // [Blockly.Msg['LISTS_GET_INDEX_FROM_END'], 'FROM_END'],
+          // [Blockly.Msg['LISTS_GET_INDEX_FIRST'], 'FIRST'],
+          // [Blockly.Msg['LISTS_GET_INDEX_LAST'], 'LAST'],
+          // [Blockly.Msg['LISTS_GET_INDEX_RANDOM'], 'RANDOM']
         ];
     this.setHelpUrl(Blockly.Msg['LISTS_GET_INDEX_HELPURL']);
     this.setStyle('list_blocks');
@@ -639,7 +639,7 @@ Blockly.Blocks['lists_getIndex'] = {
     this.removeInput('ORDINAL', true);
     // Create either a value 'AT' input or a dummy input.
     if (isAt) {
-      this.appendValueInput('AT').setCheck('Number');
+      this.appendValueInput('AT');
       if (Blockly.Msg['ORDINAL_NUMBER_SUFFIX']) {
         this.appendDummyInput('ORDINAL')
             .appendField(Blockly.Msg['ORDINAL_NUMBER_SUFFIX']);
@@ -674,16 +674,16 @@ Blockly.Blocks['lists_setIndex'] = {
   init: function() {
     var MODE =
         [
-          [Blockly.Msg['LISTS_SET_INDEX_SET'], 'SET'],
+          // [Blockly.Msg['LISTS_SET_INDEX_SET'], 'SET'],
           [Blockly.Msg['LISTS_SET_INDEX_INSERT'], 'INSERT']
         ];
     this.WHERE_OPTIONS =
         [
-          [Blockly.Msg['LISTS_GET_INDEX_FROM_START'], 'FROM_START'],
-          [Blockly.Msg['LISTS_GET_INDEX_FROM_END'], 'FROM_END'],
-          [Blockly.Msg['LISTS_GET_INDEX_FIRST'], 'FIRST'],
+          // [Blockly.Msg['LISTS_GET_INDEX_FROM_START'], 'FROM_START'],
+          // [Blockly.Msg['LISTS_GET_INDEX_FROM_END'], 'FROM_END'],
+          // [Blockly.Msg['LISTS_GET_INDEX_FIRST'], 'FIRST'],
           [Blockly.Msg['LISTS_GET_INDEX_LAST'], 'LAST'],
-          [Blockly.Msg['LISTS_GET_INDEX_RANDOM'], 'RANDOM']
+          // [Blockly.Msg['LISTS_GET_INDEX_RANDOM'], 'RANDOM']
         ];
     this.setHelpUrl(Blockly.Msg['LISTS_SET_INDEX_HELPURL']);
     this.setStyle('list_blocks');
@@ -700,7 +700,7 @@ Blockly.Blocks['lists_setIndex'] = {
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.setTooltip(Blockly.Msg['LISTS_SET_INDEX_TOOLTIP']);
-    this.updateAt_(true);
+    this.updateAt_(false);
     // Assign 'this' to a variable for use in the tooltip closure below.
     var thisBlock = this;
     this.setTooltip(function() {
