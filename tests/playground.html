@@ -243,6 +243,8 @@ function addBlock() {
     unlockPythonComparators();
   } else if (value === 'while') {
     unlockWhile();
+  } else if (value === 'print') {
+    unlockPythonPrint();
   } else {
     console.log(value)
   }
@@ -332,6 +334,7 @@ function addBlock() {
       <option value="if">if upgrade</option>
       <option value="while">while upgrade</option>
       <option value="compare">comparison operator upgrade</option>
+      <option value="print">print upgrade</option>
       <option value="dummy">dummy</option>
     </select>
     <input type="button" value="Add New Block" onclick="addBlock()">

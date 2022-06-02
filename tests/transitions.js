@@ -324,3 +324,24 @@ function unlockWhile() {
     },
   ]);
 }
+
+
+function unlockPythonPrint() {
+  Blockly.defineBlocksWithJsonArray([
+    {
+      "type": "text_print",
+      "message0": "print(%1)",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "TEXT"
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "style": "text_blocks",
+      "tooltip": Blockly.Msg['TEXT_PRINT_TOOLTIP'],
+      "helpUrl": Blockly.Msg['TEXT_PRINT_HELPURL']
+    },
+  ]);
+}
