@@ -47,6 +47,23 @@ Blockly.defineBlocksWithJsonArray([
 ]);
 
 Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
+
+  {
+    "type": "logic_condition",
+    "message0": "%1",
+    "args0": [{
+      "type": "input_value",
+      "name": "CON",
+      "check": "Boolean"
+    }],
+    "output": "Boolean",
+    "outputShape": Blockly.OUTPUT_SHAPE_HEXAGONAL,
+    "style": "field_blocks",
+    "helpUrl": "%{BKY_LOGIC_BOOLEAN_TOOLTIP}",
+    "tooltip": "%{BKY_LOGIC_BOOLEAN_HELPURL}",
+    "extensions": ["parent_tooltip_when_inline"]
+  },
+
   // Block for boolean data type: true and false.
   {
     "type": "logic_boolean",

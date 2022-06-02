@@ -295,16 +295,8 @@ function unlockWhile() {
   Blockly.defineBlocksWithJsonArray([
     {
       "type": "controls_whileUntil",
-      "message0": "%1 %2",
+      "message0": "while %1",
       "args0": [
-        {
-          "type": "field_dropdown",
-          "name": "MODE",
-          "options": [
-            ["%{BKY_CONTROLS_WHILEUNTIL_OPERATOR_WHILE}", "WHILE"],
-            // ["%{BKY_CONTROLS_WHILEUNTIL_OPERATOR_UNTIL}", "UNTIL"]
-          ]
-        },
         {
           "type": "input_value",
           "name": "BOOL",

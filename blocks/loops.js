@@ -79,16 +79,9 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
   // Block for 'do while/until' loop.
   {
     "type": "controls_whileUntil",
-    "message0": "%1 %2",
+    "message0": "repeat until %1",
     "args0": [
-      {
-        "type": "field_dropdown",
-        "name": "MODE",
-        "options": [
-          // ["%{BKY_CONTROLS_WHILEUNTIL_OPERATOR_WHILE}", "WHILE"],
-          ["%{BKY_CONTROLS_WHILEUNTIL_OPERATOR_UNTIL}", "UNTIL"]
-        ]
-      },
+    
       {
         "type": "input_value",
         "name": "BOOL",
