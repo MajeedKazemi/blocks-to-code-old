@@ -345,3 +345,25 @@ function unlockPythonPrint() {
     },
   ]);
 }
+
+
+function unlockPythonInput() {
+  Blockly.defineBlocksWithJsonArray([
+    {
+      "type": "sensing_askandwait",
+      "message0": "input(%1)",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "TEXT"
+        }
+      ],
+      "output": "String",
+      "outputShape": Blockly.OUTPUT_SHAPE_ROUND,
+      "inputsInline": true,
+      "style": "text_blocks",
+      "tooltip": Blockly.Msg['TEXT_COUNT_TOOLTIP'],
+      "helpUrl": Blockly.Msg['TEXT_COUNT_HELPURL']
+    }
+  ])
+}
